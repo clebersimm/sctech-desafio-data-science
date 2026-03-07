@@ -41,4 +41,10 @@ comparações entre grupos e análises exploratórias das variáveis disponívei
 
 - Instalação do [uv](https://docs.astral.sh/uv/) para gerenciamento de pacotes, ambientes virtuais e execução do projeto. O projeto uv foi desenvolvido para trazer mais performance nas atividades de desenvolvimento dos projetos em python.
 - Iniciar novo projeto: **uv init sctech-desafio-data-science**.
+- Todas as atividades são executas na pasta sctech-desafio-data-science
 - Criar nova pasta para armazenamento de dados, desta forma mantendo separação dos arquivos e fonte de dados(arquivos).
+- Instalar o pandas: uv add pandas
+
+## Executar o projeto   
+
+no terminal, na pasta sctech-desafio-data-science, executar uv run main.py
