@@ -54,6 +54,7 @@ no terminal, na pasta sctech-desafio-data-science, executar uv run main.py
 
 ## Relatórios  
 
-- sobreviventes por genero: Total de sobreviventes por genero em relação ao total de sobreviventes
+- sobreviventes por genero: Total de sobreviventes por genero em relação ao total de sobreviventes do mesmo genero
 - sobreviventes por genero e classe social
-- sobreviventes por idade
+- sobreviventes por idade (histograma)
+- Membros da mesma familia?
