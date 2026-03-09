@@ -47,19 +47,10 @@ def ajustar_nomeclatura_colunas(df):
         'Embarked':'porto_de_embarque'
         }, inplace=True)
 
-def ajustar_valores_nulos(df):
+def ajustar_valores(df):
     df.replace(np.nan, '-1', inplace=True)
-
-def relacao_sobrevivencia_por_colunas(df, coluna):
-    total_passageiros_por_coluna = df.groupby(coluna).size()
-    sobreviventes_por_coluna = df.query("sobreviveu == 1").groupby(coluna).size()
-    contagem = pd.DataFrame({
-        'total_passageiros': total_passageiros_por_coluna,
-        'sobreviventes': sobreviventes_por_coluna
-    })
-    contagem['relacao_sobrevivencia'] = (contagem['sobreviventes'] / contagem['total_passageiros']) * 100
-    print(contagem)
-    return contagem
+    df.replace('male', 'Masculino', inplace=True)
+    df.replace('female', 'Feminino', inplace=True)
 
 def gravar_arquivo(plt, nome_arquivo):
     diretorio_saida = "relatorios"
@@ -69,40 +60,13 @@ def gravar_arquivo(plt, nome_arquivo):
     plt.savefig(caminho_completo)
 
 
-def plotar_grafico_pizza(dados_processados, dados_plotar_grafico, gerar_arquivo=False):
-    contagem = dados_processados[dados_plotar_grafico['indice']][dados_plotar_grafico['coluna']]
-    plt.figure(figsize=(8, 8))
-    plt.pie(contagem, labels=contagem.index, autopct='%1.1f%%', startangle=140)
-    plt.title(dados_plotar_grafico['titulo'])
-    plt.axis('equal')
-    plt.legend(title=dados_plotar_grafico['coluna'], loc='lower right')
-    if gerar_arquivo:
-        gravar_arquivo(plt, dados_plotar_grafico['arquivo_saida'])
-    else:
-        plt.show()
-"""
 def plotar_grafico_barra(dados_processados, dados_plotar_grafico, gerar_arquivo=False):
-    contagem = dados_processados[dados_plotar_grafico['indice']][dados_plotar_grafico['coluna']]
     plt.figure(figsize=(10, 6))
-    contagem.plot(kind='bar')
+    dados_processados.plot(kind='bar', )
     plt.title(dados_plotar_grafico['titulo'])
     plt.xlabel(dados_plotar_grafico['legenda_eixo_x'])
-    plt.ylabel('Total')
     plt.xticks(rotation=45)
-    if gerar_arquivo:
-        gravar_arquivo(plt, dados_plotar_grafico['arquivo_saida'])
-    else:
-        plt.show()
-"""
-
-def plotar_grafico_barra(dados_processados, dados_plotar_grafico, gerar_arquivo=False):
-    plt.plot(dados_processados)
-    plt.figure(figsize=(10, 6))
-    dados_processados.plot(kind='bar')
-    plt.title(dados_plotar_grafico['titulo'])
-    plt.xlabel(dados_plotar_grafico['legenda_eixo_x'])
     plt.ylabel('Total')
-    plt.xticks(rotation=45)
     if gerar_arquivo:
         gravar_arquivo(plt, dados_plotar_grafico['arquivo_saida'])
     else:
@@ -112,34 +76,35 @@ def main():
     df = carregar_arquivo_csv("data/titanic_dataset.csv")
     remover_colunas_desnecessarias(df, ['Name', 'Ticket', 'Fare', 'Cabin', 'Embarked'])
     remover_linhas_duplicadas(df)
-    ajustar_valores_nulos(df)
+    ajustar_valores(df)
     ajustar_nomeclatura_colunas(df)
-    total_passageiros = len(df)
-    total_sobreviventes = df.query("sobreviveu == 1")['sobreviveu'].count()
-    print(df.groupby('genero').size())
-    dados_processados = {
-        'total_passageiros': total_passageiros,
-        'total_sobreviventes': total_sobreviventes,
-        'relacao_sobrevivencia_por_classe': relacao_sobrevivencia_por_colunas(df, ['classe']),
-        'relacao_sobrevivencia_por_genero': relacao_sobrevivencia_por_colunas(df, ['genero']),
-        'relacao_sobrevivencia_por_genero_classe': relacao_sobrevivencia_por_colunas(df, ['genero', 'classe'])
-    }
     
-    #print(dados_processados)
-    plotar_grafico_barra(dados_processados['relacao_sobrevivencia_por_genero'], {
-        'indice': 'relacao_sobrevivencia_por_genero',
-        'legenda_eixo_x': 'Gênero',
-        'titulo': 'Relação de sobreviventes por gênero',
-        'arquivo_saida': 'relacao_sobreviventes_por_genero.png'
-    },gerar_arquivo=False)
-    """
-    plotar_grafico_pizza(dados_processados, {
-        'indice': 'relacao_sobrevivencia_por_genero_classe',
-        'coluna': 'sobreviventes',
-        'titulo': 'Relação de sobreviventes por gênero e classe',
-        'arquivo_saida': 'relacao_sobreviventes_por_genero_e_classe.png'
-    },gerar_arquivo=False)
-    """
+    #plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=False)
+    #plotar_grafico_barra(df.query('sobreviveu == 1').groupby('genero').size(),{'titulo':'Total de sobreviventes por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=False)
+    #plotar_grafico_barra(df.query('sobreviveu == 1').groupby(['genero', 'classe']).size(),{'titulo':'Total de sobreviventes por genero por classe','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=False)
+
+"""
+    # Cálculo dos dados para mulheres
+    total_feminino = df[df['genero'] == 'Feminino'].shape[0]
+    sobreviventes_feminino = df[(df['genero'] == 'Feminino') & (df['sobreviveu'] == 1)].shape[0]
+    percentual_sobreviventes = (sobreviventes_feminino / total_feminino) * 100 if total_feminino > 0 else 0
+
+    print(f"Total de mulheres que embarcaram: {total_feminino}")
+    print(f"Total de mulheres que sobreviveram: {sobreviventes_feminino}")
+    print(f"Percentual de mulheres sobreviventes: {percentual_sobreviventes:.2f}%")
+
+    # Plotar gráfico de barras para mulheres
+    import pandas as pd
+    dados_mulheres = pd.Series({
+        'Total embarcado': total_feminino,
+        'Sobreviventes': sobreviventes_feminino
+    })
+    plotar_grafico_barra(dados_mulheres, {
+        'titulo': 'Mulheres: Total embarcado vs Sobreviventes',
+        'legenda_eixo_x': 'Situação',
+        'arquivo_saida': 'mulheres_embarcadas_vs_sobreviventes.png'
+    }, gerar_arquivo=False)
+"""
 
 if __name__ == "__main__":
     main()
