@@ -41,10 +41,7 @@ def ajustar_nomeclatura_colunas(df):
         'Age':'idade',
         'SibSp':'irmaos_conjuges',
         'Parch':'pais_filhos',
-        'Ticket':'bilhete',
-        'Fare':'tarifa',
-        'Cabin':'cabine',
-        'Embarked':'porto_de_embarque'
+        'Ticket':'ticket',
         }, inplace=True)
 
 def ajustar_valores(df):
@@ -84,39 +81,46 @@ def plotar_grafico_barra(df, parametros, gerar_arquivo=False):
     else:
         plt.show()
 
-def main():
-    df = carregar_arquivo_csv("data/titanic_dataset.csv")
-    remover_colunas_desnecessarias(df, ['Name', 'Ticket', 'Fare', 'Cabin', 'Embarked'])
-    remover_linhas_duplicadas(df)
-    ajustar_nomeclatura_colunas(df)
-    ajustar_valores(df)
-    plotar_histograma_idade(df, gerar_arquivo=True)
-    plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=False)
-    plotar_grafico_barra(df.query('sobreviveu == 1').groupby('genero').size(),{'titulo':'Total de sobreviventes por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=False)
-    plotar_grafico_barra(df.query('sobreviveu == 1').groupby(['genero', 'classe']).size(),{'titulo':'Total de sobreviventes por genero por classe','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=False)
+def sobreviventes_por_genero(df):
+    total_genero_feminino = df[df['genero'] == 'Feminino'].shape[0]
+    sobreviventes_genero_feminino = df[(df['genero'] == 'Feminino') & (df['sobreviveu'] == 1)].shape[0]
+    percentual_sobreviventes = (sobreviventes_genero_feminino / total_genero_feminino) * 100 if total_genero_feminino > 0 else 0
 
-"""
-    # Cálculo dos dados para mulheres
-    total_feminino = df[df['genero'] == 'Feminino'].shape[0]
-    sobreviventes_feminino = df[(df['genero'] == 'Feminino') & (df['sobreviveu'] == 1)].shape[0]
-    percentual_sobreviventes = (sobreviventes_feminino / total_feminino) * 100 if total_feminino > 0 else 0
-
-    print(f"Total de mulheres que embarcaram: {total_feminino}")
-    print(f"Total de mulheres que sobreviveram: {sobreviventes_feminino}")
+    print(f"Total de mulheres que embarcaram: {total_genero_feminino}")
+    print(f"Total de mulheres que sobreviveram: {sobreviventes_genero_feminino}")
     print(f"Percentual de mulheres sobreviventes: {percentual_sobreviventes:.2f}%")
 
     # Plotar gráfico de barras para mulheres
-    import pandas as pd
     dados_mulheres = pd.Series({
-        'Total embarcado': total_feminino,
-        'Sobreviventes': sobreviventes_feminino
+        'Total embarcado': total_genero_feminino,
+        'Sobreviventes': sobreviventes_genero_feminino
     })
     plotar_grafico_barra(dados_mulheres, {
-        'titulo': 'Mulheres: Total embarcado vs Sobreviventes',
+        'titulo': 'Genero feminino: Total embarcado vs Sobreviventes',
         'legenda_eixo_x': 'Situação',
-        'arquivo_saida': 'mulheres_embarcadas_vs_sobreviventes.png'
-    }, gerar_arquivo=False)
-"""
+        'arquivo_saida': 'genero_feminino_embarcadas_vs_sobreviventes.png'
+    }, gerar_arquivo=True)
+
+def agrupar_sobreviventes_por_familia(df):
+    df['familia'] = df['nome'].apply(lambda x: x.split(',')[0])
+    sobreviventes_por_familia = df.groupby(['familia','ticket','sobreviveu']).size().sort_values(ascending=False)
+    print("Top 10 famílias com mais sobreviventes:")
+    print(sobreviventes_por_familia.head(10))
+
+def main():
+    df = carregar_arquivo_csv("data/titanic_dataset.csv")
+    remover_colunas_desnecessarias(df, ['Fare', 'Cabin', 'Embarked'])
+    remover_linhas_duplicadas(df)
+    ajustar_nomeclatura_colunas(df)
+    ajustar_valores(df)
+    """
+    plotar_histograma_idade(df, gerar_arquivo=True)
+    plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=True)
+    plotar_grafico_barra(df.query('sobreviveu == 1').groupby('genero').size(),{'titulo':'Total de sobreviventes por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=True)
+    plotar_grafico_barra(df.query('sobreviveu == 1').groupby(['genero', 'classe']).size(),{'titulo':'Total de sobreviventes por genero e classe','legenda_eixo_x':'Gênero/Classe','arquivo_saida':'total_sobreviventes_por_genero_e_classe.png'}, gerar_arquivo=True)
+    sobreviventes_por_genero(df)
+    """
+    agrupar_sobreviventes_por_familia(df)
 
 if __name__ == "__main__":
     main()
