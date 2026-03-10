@@ -48,9 +48,7 @@ def ajustar_nomeclatura_colunas(df):
         }, inplace=True)
 
 def ajustar_valores(df):
-    df.replace(np.nan, '-1', inplace=True)
-    df.replace('male', 'Masculino', inplace=True)
-    df.replace('female', 'Feminino', inplace=True)
+    df['genero'] = df['genero'].map({'male': 'Masculino', 'female': 'Feminino'})
 
 def gravar_arquivo(plt, nome_arquivo):
     diretorio_saida = "relatorios"
@@ -59,16 +57,30 @@ def gravar_arquivo(plt, nome_arquivo):
     caminho_completo = os.path.join(diretorio_saida, nome_arquivo)
     plt.savefig(caminho_completo)
 
-
-def plotar_grafico_barra(dados_processados, dados_plotar_grafico, gerar_arquivo=False):
+def plotar_histograma_idade(df, gerar_arquivo=False):
     plt.figure(figsize=(10, 6))
-    dados_processados.plot(kind='bar', )
-    plt.title(dados_plotar_grafico['titulo'])
-    plt.xlabel(dados_plotar_grafico['legenda_eixo_x'])
-    plt.xticks(rotation=45)
-    plt.ylabel('Total')
+    sobreviventes_por_idade = df[df['sobreviveu'] == 1]['idade'].dropna()
+    plt.hist(sobreviventes_por_idade, bins=20, color='green', edgecolor='black')
+    plt.title('Distribuição da idade dos sobreviventes')
+    plt.xlabel('Idade')
+    plt.ylabel('Número de sobreviventes')
+    plt.grid(axis='y', linestyle='--',alpha=0.75)
+    plt.tight_layout()
     if gerar_arquivo:
-        gravar_arquivo(plt, dados_plotar_grafico['arquivo_saida'])
+        gravar_arquivo(plt, 'histograma_idade_sobreviventes.png')
+    else:
+        plt.show()
+
+def plotar_grafico_barra(df, parametros, gerar_arquivo=False):
+    plt.figure(figsize=(10, 6))
+    df.plot(kind='bar', color='blue', edgecolor='black')
+    plt.title(parametros['titulo'])
+    plt.xlabel(parametros['legenda_eixo_x'])
+    plt.ylabel('Quantidade')
+    plt.grid(axis='y', linestyle='--', alpha=0.75)
+    plt.tight_layout()
+    if gerar_arquivo:
+        gravar_arquivo(plt, parametros['arquivo_saida'])
     else:
         plt.show()
 
@@ -76,12 +88,12 @@ def main():
     df = carregar_arquivo_csv("data/titanic_dataset.csv")
     remover_colunas_desnecessarias(df, ['Name', 'Ticket', 'Fare', 'Cabin', 'Embarked'])
     remover_linhas_duplicadas(df)
-    ajustar_valores(df)
     ajustar_nomeclatura_colunas(df)
-    
-    #plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=False)
-    #plotar_grafico_barra(df.query('sobreviveu == 1').groupby('genero').size(),{'titulo':'Total de sobreviventes por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=False)
-    #plotar_grafico_barra(df.query('sobreviveu == 1').groupby(['genero', 'classe']).size(),{'titulo':'Total de sobreviventes por genero por classe','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=False)
+    ajustar_valores(df)
+    plotar_histograma_idade(df, gerar_arquivo=True)
+    plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=False)
+    plotar_grafico_barra(df.query('sobreviveu == 1').groupby('genero').size(),{'titulo':'Total de sobreviventes por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=False)
+    plotar_grafico_barra(df.query('sobreviveu == 1').groupby(['genero', 'classe']).size(),{'titulo':'Total de sobreviventes por genero por classe','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=False)
 
 """
     # Cálculo dos dados para mulheres
