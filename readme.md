@@ -55,9 +55,19 @@ comparações entre grupos e análises exploratórias das variáveis disponívei
 no terminal, na pasta sctech-desafio-data-science, executar uv run main.py
 
 
-## Relatórios  
+## Desenvolvimento da solução   
+
+Para o desenvolvimento do projeto exposto, verificação de dados que possam ter sido relevantes para a sobrevivencia dos passageiros do Titanic, foram verificados dados como:
+- Genero
+- Idade
+- Classe social  
+
+
+
 
 Foram desenvolvidos os relatórios de histógrama de sobreviventes pela idade.   
+
+![Histograma de passageiros pela idade](./sctech-desafio-data-science/relatorios/histograma_idade_passageiros.png)
 
 ![Histograma de sobreviventes pela idade](./sctech-desafio-data-science/relatorios/histograma_idade_sobreviventes.png)
 

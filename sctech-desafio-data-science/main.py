@@ -52,6 +52,20 @@ def gravar_arquivo(plt, nome_arquivo):
 
 def plotar_histograma_idade(df, gerar_arquivo=False):
     plt.figure(figsize=(10, 6))
+    idades = df['idade']
+    plt.hist(idades, bins=20, color='orange', edgecolor='black')
+    plt.title('Distribuição da idade dos passageiros')
+    plt.xlabel('Idade')
+    plt.ylabel('Número de passageiros')
+    plt.grid(axis='y', linestyle='--',alpha=0.75)
+    plt.tight_layout()
+    if gerar_arquivo:
+        gravar_arquivo(plt, 'histograma_idade_passageiros.png')
+    else:
+        plt.show()
+
+def plotar_histograma_sobreviventes_idade(df, gerar_arquivo=False):
+    plt.figure(figsize=(10, 6))
     sobreviventes_por_idade = df[df['sobreviveu'] == 1]['idade']
     plt.hist(sobreviventes_por_idade, bins=20, color='green', edgecolor='black')
     plt.title('Distribuição da idade dos sobreviventes')
@@ -80,11 +94,6 @@ def plotar_grafico_barra(df, parametros, gerar_arquivo=False):
 def sobreviventes_por_genero(df):
     total_genero_feminino = df[df['genero'] == 'Feminino'].shape[0]
     sobreviventes_genero_feminino = df[(df['genero'] == 'Feminino') & (df['sobreviveu'] == 1)].shape[0]
-    percentual_sobreviventes = (sobreviventes_genero_feminino / total_genero_feminino) * 100 if total_genero_feminino > 0 else 0
-
-    print(f"Total de mulheres que embarcaram: {total_genero_feminino}")
-    print(f"Total de mulheres que sobreviveram: {sobreviventes_genero_feminino}")
-    print(f"Percentual de mulheres sobreviventes: {percentual_sobreviventes:.2f}%")
 
     # Plotar gráfico de barras para mulheres
     dados_mulheres = pd.Series({
@@ -111,6 +120,7 @@ def main():
     ajustar_valores(df)
     
     plotar_histograma_idade(df, gerar_arquivo=True)
+    plotar_histograma_sobreviventes_idade(df, gerar_arquivo=True)
     plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=True)
     plotar_grafico_barra(df.query('sobreviveu == 1').groupby('genero').size(),{'titulo':'Total de sobreviventes por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=True)
     plotar_grafico_barra(df.query('sobreviveu == 1').groupby(['genero', 'classe']).size(),{'titulo':'Total de sobreviventes por genero e classe','legenda_eixo_x':'Gênero/Classe','arquivo_saida':'total_sobreviventes_por_genero_e_classe.png'}, gerar_arquivo=True)
