@@ -18,20 +18,15 @@ def carregar_arquivo_csv(caminho_arquivo):
         print(f"Ocorreu um erro ao carregar o arquivo: {e}")
 
 def remover_linhas_duplicadas(df):
-    #print(f"Verificando linhas duplicadas. Total de linhas antes da limpeza: {len(df)}")
     total_linhas_duplicadas = df.duplicated().sum()
-    #print(f"Total de linhas duplicadas encontradas: {total_linhas_duplicadas}")
     if total_linhas_duplicadas > 0:
         df.drop_duplicates(keep='last', inplace=True)
-     #   print(f"Linhas duplicadas removidas. Total de linhas após limpeza: {len(df)}")
     return df
 
 def remover_colunas_desnecessarias(df, colunas_para_remover):
-    #print(f"Removendo colunas desnecessárias: {colunas_para_remover}")
     df.drop(columns=colunas_para_remover, inplace=True)
 
 def ajustar_nomeclatura_colunas(df):
-    #print("Ajustando a nomenclatura das colunas para português...")
     df.rename(columns={
         'PassengerId':'identificacao_passageiro',
         'Survived':'sobreviveu',
@@ -46,6 +41,7 @@ def ajustar_nomeclatura_colunas(df):
 
 def ajustar_valores(df):
     df['genero'] = df['genero'].map({'male': 'Masculino', 'female': 'Feminino'})
+    df['idade'] = df['idade'].fillna(df['idade'].median())
 
 def gravar_arquivo(plt, nome_arquivo):
     diretorio_saida = "relatorios"
@@ -56,7 +52,7 @@ def gravar_arquivo(plt, nome_arquivo):
 
 def plotar_histograma_idade(df, gerar_arquivo=False):
     plt.figure(figsize=(10, 6))
-    sobreviventes_por_idade = df[df['sobreviveu'] == 1]['idade'].dropna()
+    sobreviventes_por_idade = df[df['sobreviveu'] == 1]['idade']
     plt.hist(sobreviventes_por_idade, bins=20, color='green', edgecolor='black')
     plt.title('Distribuição da idade dos sobreviventes')
     plt.xlabel('Idade')
@@ -101,11 +97,11 @@ def sobreviventes_por_genero(df):
         'arquivo_saida': 'genero_feminino_embarcadas_vs_sobreviventes.png'
     }, gerar_arquivo=True)
 
+
 def agrupar_sobreviventes_por_familia(df):
     df['familia'] = df['nome'].apply(lambda x: x.split(',')[0])
-    sobreviventes_por_familia = df.groupby(['familia','ticket','sobreviveu']).size().sort_values(ascending=False)
-    print("Top 10 famílias com mais sobreviventes:")
-    print(sobreviventes_por_familia.head(10))
+    sobreviventes_por_familia = df.groupby(['familia','sobreviveu']).size().sort_values(ascending=False)
+    print(sobreviventes_por_familia)
 
 def main():
     df = carregar_arquivo_csv("data/titanic_dataset.csv")
@@ -113,14 +109,16 @@ def main():
     remover_linhas_duplicadas(df)
     ajustar_nomeclatura_colunas(df)
     ajustar_valores(df)
-    """
+    
     plotar_histograma_idade(df, gerar_arquivo=True)
     plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=True)
     plotar_grafico_barra(df.query('sobreviveu == 1').groupby('genero').size(),{'titulo':'Total de sobreviventes por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=True)
     plotar_grafico_barra(df.query('sobreviveu == 1').groupby(['genero', 'classe']).size(),{'titulo':'Total de sobreviventes por genero e classe','legenda_eixo_x':'Gênero/Classe','arquivo_saida':'total_sobreviventes_por_genero_e_classe.png'}, gerar_arquivo=True)
+    plotar_grafico_barra(df.query('sobreviveu == 1 and idade <= 18').groupby('idade').size(),{'titulo':'Total de sobreviventes menores de 18 anos','legenda_eixo_x':'Idade','arquivo_saida':'total_sobreviventes_menores_de_18_anos.png'}, gerar_arquivo=True)
+    plotar_grafico_barra(df.query('sobreviveu == 1 and idade <= 18 and pais_filhos == 0').groupby('idade').size(),{'titulo':'Total de sobreviventes menores de 18 anos sem pais','legenda_eixo_x':'Idade','arquivo_saida':'total_sobreviventes_menores_de_18_anos_sem_pais.png'}, gerar_arquivo=True)
     sobreviventes_por_genero(df)
-    """
-    agrupar_sobreviventes_por_familia(df)
+    
+    #agrupar_sobreviventes_por_familia(df)
 
 if __name__ == "__main__":
     main()

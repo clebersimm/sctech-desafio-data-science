@@ -46,6 +46,9 @@ comparações entre grupos e análises exploratórias das variáveis disponívei
 - Criar nova pasta para armazenamento de dados, desta forma mantendo separação dos arquivos e fonte de dados(arquivos).
 - Instalar o pandas: uv add pandas
 - Instalar matplot: uv add matplotlib
+- Dividido por métodos as funcionalidades para melhor leitura do código e no caso de algum bug mais fácil de identificar.
+- Criado método para gerar os gráficos mais utilizados e outro método para gerar as imagens para dentro do diretório de relatórios.
+- No método de ajustar_valores foi escolhido colocar a medianda da idade para manter a quantidade de valores. Esta decisão foi tomada depois de pesquisar se era melhor remover ou colocar a mediana, pela pesquisa foi exposto que para análise estatística é melhor manter a mediana.
 
 ## Executar o projeto   
 
@@ -54,7 +57,20 @@ no terminal, na pasta sctech-desafio-data-science, executar uv run main.py
 
 ## Relatórios  
 
-- sobreviventes por genero: Total de sobreviventes por genero em relação ao total de sobreviventes do mesmo genero
-- sobreviventes por genero e classe social
-- sobreviventes por idade (histograma)
-- Membros da mesma familia?
+Foram desenvolvidos os relatórios de histógrama de sobreviventes pela idade.   
+
+![Histograma de sobreviventes pela idade](./sctech-desafio-data-science/relatorios/histograma_idade_sobreviventes.png)
+
+
+Total de passageiros por genero.   
+
+![Total de passageiros por genero](./sctech-desafio-data-science/relatorios/total_passageiros_por_genero.png)   
+
+Total de sobreviventes por genero.   
+
+![Total de sobreviventes por genero](./sctech-desafio-data-science/relatorios/total_sobreviventes_por_genero.png)   
+
+
+Total sobreviventes por genero e classe.    
+
+![Total de sobreviventes por genero e classe](./sctech-desafio-data-science/relatorios/total_sobreviventes_por_genero_e_classe.png)
