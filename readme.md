@@ -35,27 +35,26 @@ comparações entre grupos e análises exploratórias das variáveis disponívei
 
 - vscode
   - Extensões: github copilot, markdown preview, pylance, python, python debugger, python environments
-- python: python3.12.3
+- python: python3.12.3, uv
   - libs: pandas, matplotlib
 
 ## Desenvolvimento do projeto  
 
+Estes foram os passos executados para o desenvolvimento do projeto, não são necessários para a execução deste.
+
 - Instalação do [uv](https://docs.astral.sh/uv/) para gerenciamento de pacotes, ambientes virtuais e execução do projeto. O projeto uv foi desenvolvido para trazer mais performance nas atividades de desenvolvimento dos projetos em python.
 - Iniciar novo projeto: **uv init sctech-desafio-data-science**.
 - Todas as atividades são executas na pasta sctech-desafio-data-science
-- Criar nova pasta para armazenamento de dados, desta forma mantendo separação dos arquivos e fonte de dados(arquivos).
+- Criar nova pasta para armazenamento de dados, desta forma mantendo separação dos arquivos e fonte de dados(arquivos). Nome da pasta **data**
 - Instalar o pandas: uv add pandas
 - Instalar matplot: uv add matplotlib
-- Dividido por métodos as funcionalidades para melhor leitura do código e no caso de algum bug mais fácil de identificar.
+- Dividido por métodos as funcionalidades para melhor leitura do código e no caso de algum bug mais fácil de identificar.   
 - Criado método para gerar os gráficos mais utilizados e outro método para gerar as imagens para dentro do diretório de relatórios.
 - No método de ajustar_valores foi escolhido colocar a medianda da idade para manter a quantidade de valores. Esta decisão foi tomada depois de pesquisar se era melhor remover ou colocar a mediana, pela pesquisa foi exposto que para análise estatística é melhor manter a mediana.
 
-## Executar o projeto   
-
-no terminal, na pasta sctech-desafio-data-science, executar uv run main.py
-
-
 ## Relatórios  
+
+Para executar o projeto e gerar as imagens do relatórios: no terminal, na pasta sctech-desafio-data-science, executar **uv run main.py**
 
 Foram desenvolvidos os relatórios de histógrama de sobreviventes pela idade.   
 
