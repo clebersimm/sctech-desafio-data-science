@@ -112,7 +112,6 @@ def sobreviventes_por_genero(df):
     total_genero_feminino = df[df['genero'] == 'Feminino'].shape[0]
     sobreviventes_genero_feminino = df[(df['genero'] == 'Feminino') & (df['sobreviveu'] == 1)].shape[0]
 
-    # Plotar gráfico de barras para mulheres
     dados_mulheres = pd.Series({
         'Total embarcado': total_genero_feminino,
         'Sobreviventes': sobreviventes_genero_feminino
@@ -140,13 +139,15 @@ def main():
     plotar_histograma_idade(df, gerar_arquivo=True)
     totais = f'Mulheres: {df.query('genero == "Feminino"').groupby('genero').size().iloc[0]} \n Homens:{df.query('genero == "Masculino"').groupby('genero').size().iloc[0]}'
     plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','totais':totais,'arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=True)
+    plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','totais':totais,'arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=True)
     plotar_grafico_pizza(df.query('sobreviveu == 1').groupby('genero').size(),{'titulo':'Total de sobreviventes por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=True)
     plotar_grafico_pizza(df.query('sobreviveu == 1').groupby(['genero', 'classe']).size(),{'titulo':'Total de sobreviventes por genero e classe','legenda_eixo_x':'Gênero/Classe','arquivo_saida':'total_sobreviventes_por_genero_e_classe.png'}, gerar_arquivo=True)
+    plotar_grafico_pizza(df.groupby(['genero', 'classe']).size(),{'titulo':'Total de passageiros por genero e classe','legenda_eixo_x':'Gênero/Classe','arquivo_saida':'total_passageiros_por_genero_e_classe.png'}, gerar_arquivo=True)
     plotar_grafico_barra(df.query('sobreviveu == 1 and idade <= 18').groupby('idade').size(),{'titulo':'Total de sobreviventes menores de 18 anos','legenda_eixo_x':'Idade','totais':'1','arquivo_saida':'total_sobreviventes_menores_de_18_anos.png'}, gerar_arquivo=True)
     plotar_grafico_barra(df.query('sobreviveu == 1 and idade <= 18 and pais_filhos == 0').groupby('idade').size(),{'titulo':'Total de sobreviventes menores de 18 anos sem pais','totais':'1','legenda_eixo_x':'Idade','arquivo_saida':'total_sobreviventes_menores_de_18_anos_sem_pais.png'}, gerar_arquivo=True)
     sobreviventes_por_genero(df)
     
-    #agrupar_sobreviventes_por_familia(df)
+    agrupar_sobreviventes_por_familia(df)
 
 if __name__ == "__main__":
     main()
