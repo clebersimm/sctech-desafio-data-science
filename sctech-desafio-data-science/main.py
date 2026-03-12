@@ -139,7 +139,6 @@ def main():
     plotar_histograma_idade(df, gerar_arquivo=True)
     totais = f'Mulheres: {df.query('genero == "Feminino"').groupby('genero').size().iloc[0]} \n Homens:{df.query('genero == "Masculino"').groupby('genero').size().iloc[0]}'
     plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','totais':totais,'arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=True)
-    plotar_grafico_barra(df.groupby('genero').size(),{'titulo':'Total de passageiros por genero','legenda_eixo_x':'Gênero','totais':totais,'arquivo_saida':'total_passageiros_por_genero.png'}, gerar_arquivo=True)
     plotar_grafico_pizza(df.query('sobreviveu == 1').groupby('genero').size(),{'titulo':'Total de sobreviventes por genero','legenda_eixo_x':'Gênero','arquivo_saida':'total_sobreviventes_por_genero.png'}, gerar_arquivo=True)
     plotar_grafico_pizza(df.query('sobreviveu == 1').groupby(['genero', 'classe']).size(),{'titulo':'Total de sobreviventes por genero e classe','legenda_eixo_x':'Gênero/Classe','arquivo_saida':'total_sobreviventes_por_genero_e_classe.png'}, gerar_arquivo=True)
     plotar_grafico_pizza(df.groupby(['genero', 'classe']).size(),{'titulo':'Total de passageiros por genero e classe','legenda_eixo_x':'Gênero/Classe','arquivo_saida':'total_passageiros_por_genero_e_classe.png'}, gerar_arquivo=True)

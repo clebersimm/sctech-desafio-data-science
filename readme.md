@@ -57,10 +57,13 @@ uv run main.py
 
 ## Desenvolvimento da Solução
 
-Para o desenvolvimento do projeto, foram verificados dados que poderiam ter sido relevantes para a sobrevivência dos passageiros do Titanic. Assim, foram analisados dados como:
+Para o desenvolvimento do projeto, foram verificados dados que poderiam ter sido relevantes para a sobrevivência dos passageiros do Titanic. Assim, foram analisados fatores como:
 - Gênero
 - Idade
 - Classe social
+
+O objetivo é tentar estabelecer a existência de um relacionamento entre estes fatores, como se pessoas mais jovens possuem mais chances de sobreviver, ou se fatores sociais possuem mais impacto. Ou se a antiga norma dos mares de "mulheres e crianças" primeiro possui um efeito real.  
+
 
 Primeiro, foram desenvolvidos gráficos explorando a idade dos passageiros e, em seguida, a idade dos sobreviventes.
 
@@ -109,3 +112,7 @@ Através da análise dos gráficos gerados e suas distribuições, é possível 
 
 Foram gerados outros gráficos, que estão na pasta de relatórios, mas não foram utilizados na análise principal e foram mantidos como curiosidade.
 Também foi iniciada uma análise por famílias, tentando cruzar os dados de sobrenome e as colunas de pais, filhos e irmãos, mas, devido a restrições de tempo e conhecimento das ferramentas, essa análise foi deixada para o futuro.
+
+
+
+Repositório: https://github.com/clebersimm/sctech-desafio-data-science
